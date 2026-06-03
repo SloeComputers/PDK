@@ -5,6 +5,8 @@
    
 #pragma once
 
+#include <cstdlib>
+
 #include "Base.h"
 
 namespace SIG::osc {
