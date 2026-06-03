@@ -37,6 +37,7 @@ endif()
 
 string(TOUPPER "${PDK_TARGET}" PDK_TARGET_UPPER)
 
+target_compile_definitions(TGT PUBLIC PDK_PROJ_NAME="${CMAKE_PROJECT_NAME}")
 target_compile_definitions(TGT PUBLIC PDK_PROJ_VERSION="${PROJECT_VERSION}")
 target_compile_definitions(TGT PUBLIC PDK_PROJ_COMMIT="${PDK_PROJ_COMMIT}")
 target_compile_definitions(TGT PUBLIC PDK_TARGET="${PDK_TARGET}")
