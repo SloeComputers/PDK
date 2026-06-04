@@ -106,6 +106,13 @@ if("${PDK_TARGET}" STREQUAL "native")
    add_subdirectory(TGT)
    add_subdirectory(UCL)
 
+elseif("${PDK_TARGET}" STREQUAL "vst3")
+
+   set(PDK_NATIVE  TRUE)
+   set(PDK_MACHINE ${CMAKE_HOST_SYSTEM_PROCESSOR})
+
+   add_subdirectory(TGT)
+
 else()
 
    set(PDK_NATIVE FALSE)
