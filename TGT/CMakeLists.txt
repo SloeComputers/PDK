@@ -3,13 +3,13 @@
 # SPDX-License-Identifier: MIT
 #-------------------------------------------------------------------------------
 
+add_subdirectory(${PDK_TARGET})
+
 if(${PDK_NATIVE})
 
    add_library(TGT STATIC empty.cpp)
 
 else()
-
-   add_subdirectory(${PDK_TARGET})
 
    add_library(TGT STATIC
                TGT_loader.cpp
@@ -40,6 +40,9 @@ string(TOUPPER "${PDK_TARGET}" PDK_TARGET_UPPER)
 target_compile_definitions(TGT PUBLIC PDK_PROJ_NAME="${CMAKE_PROJECT_NAME}")
 target_compile_definitions(TGT PUBLIC PDK_PROJ_VERSION="${PROJECT_VERSION}")
 target_compile_definitions(TGT PUBLIC PDK_PROJ_COMMIT="${PDK_PROJ_COMMIT}")
+target_compile_definitions(TGT PUBLIC PDK_PROJ_OWNER="${PDK_PROJ_OWNER}")
+target_compile_definitions(TGT PUBLIC PDK_PROJ_EMAIL="${PDK_PROJ_EMAIL}")
+target_compile_definitions(TGT PUBLIC PDK_PROJ_URL="${CMAKE_PROJECT_HOMEPAGE_URL}")
 target_compile_definitions(TGT PUBLIC PDK_TARGET="${PDK_TARGET}")
 target_compile_definitions(TGT PUBLIC PDK_MACHINE="${PDK_MACHINE}")
 target_compile_definitions(TGT PUBLIC PDK_${PDK_TARGET_UPPER}=1)

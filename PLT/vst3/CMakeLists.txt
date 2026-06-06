@@ -8,7 +8,9 @@
 add_subdirectory(${VST3SDK_SOURCE_DIR}/vst3sdk ${PROJECT_BINARY_DIR}/vst3sdk)
 
 add_library(PLT STATIC
+    plugin.cpp
+    Processor.cpp
     MIDIInterface.cpp)
 
 target_link_libraries(PLT
-    PUBLIC MIDI sdk)
+    PUBLIC MIDI SIG_FL64 sdk TGT TGT_PLG)

@@ -80,10 +80,22 @@ include(CTest)
 #    PDK_MACHINE
 #    PDK_PROJ_COMMIT
 
-# Determine current git commit
+# Determine current git status
 execute_process(COMMAND git log --pretty=format:%H -n 1
                 WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
                 OUTPUT_VARIABLE PDK_PROJ_COMMIT)
+
+if(NOT PDK_PROJ_OWNER)
+   execute_process(COMMAND git config get user.name
+                   OUTPUT_VARIABLE PDK_PROJ_OWNER
+                   OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
+
+if(NOT PDK_PROJ_EMAIL)
+   execute_process(COMMAND git config get user.email
+                   OUTPUT_VARIABLE PDK_PROJ_EMAIL
+                   OUTPUT_STRIP_TRAILING_WHITESPACE)
+endif()
 
 if(NOT PDK_TARGET)
    if(DEFINED ENV{PDK_TARGET})
@@ -134,6 +146,8 @@ message("CMAKE_PROJECT_VERSION = ${CMAKE_PROJECT_VERSION}")
 message("CMAKE_BUILD_TYPE      = ${CMAKE_BUILD_TYPE}")
 message("--------------------------------------------------------------------------------")
 message("PDK_PROJ_COMMIT    = ${PDK_PROJ_COMMIT}")
+message("PDK_PROJ_OWNER     = ${PDK_PROJ_OWNER}")
+message("PDK_PROJ_EMAIL     = ${PDK_PROJ_EMAIL}")
 message("PDK_TARGET         = ${PDK_TARGET}")
 message("PDK_NATIVE         = ${PDK_NATIVE}")
 message("PDK_MACHINE        = ${PDK_MACHINE}")
