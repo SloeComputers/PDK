@@ -13,15 +13,10 @@
 #include "Processor.h"
 #include "Controller.h"
 
-#include "PLT/PLGMidi.h"
-#include "PLT/PLGAudio.h"
-
-static MIDI::Instrument*  midi_inst{};
-static Audio::Instrument* audio_inst{};
-
 using namespace Steinberg;
 
 Processor::Processor()
+   : synth(PLT::Synth::construct())
 {
    setControllerClass(Controller::uid());
 }
@@ -48,7 +43,7 @@ tresult PLUGIN_API Processor::setActive(TBool state_)
 {
   if (state_)
   {
-     midi_inst->allSoundsOff(/* channel */ 0);
+     synth->allSoundsOff(/* channel */ 0);
   }
 
   return Vst::AudioEffect::setActive(state_);
@@ -77,15 +72,15 @@ tresult PLUGIN_API Processor::process(Vst::ProcessData& data)
          switch(event.type)
          {
          case Vst::Event::kNoteOnEvent:
-            midi_inst->noteOn(uint8_t(event.noteOn.channel),
-                              uint8_t(event.noteOn.pitch),
-                              uint8_t(event.noteOn.velocity * 127));
+            synth->noteOn(uint8_t(event.noteOn.channel),
+                          uint8_t(event.noteOn.pitch),
+                          uint8_t(event.noteOn.velocity * 127));
             break;
 
          case Vst::Event::kNoteOffEvent:
-            midi_inst->noteOff(uint8_t(event.noteOn.channel),
-                               uint8_t(event.noteOn.pitch),
-                               uint8_t(event.noteOn.velocity * 127));
+            synth->noteOff(uint8_t(event.noteOn.channel),
+                           uint8_t(event.noteOn.pitch),
+                           uint8_t(event.noteOn.velocity * 127));
             break;
 
          default:
@@ -126,11 +121,11 @@ void Processor::render(Vst::ProcessData& data, int32_t start, int32_t end, bool&
 
    SAMPLE** buffer = reinterpret_cast<SAMPLE**>(data.outputs[0].channelBuffers32);
 
-   if (midi_inst->isAnyVoiceOn())
+   if (synth->isAnyVoiceOn())
    {
       for(int32_t i = start; i < end; ++i)
       {
-         SIG::Float value = audio_inst->getSample();
+         SIG::Float value = synth->getSample();
 
          for(int32_t channel = 0; channel < data.outputs[0].numChannels; ++channel)
          {
@@ -150,14 +145,4 @@ void Processor::render(Vst::ProcessData& data, int32_t start, int32_t end, bool&
          }
       }
    }
-}
-
-void Midi::attachInstrument(MIDI::Instrument& instrument_)
-{
-   midi_inst = &instrument_;
-}
-
-void Audio::attachInstrument(Audio::Instrument& instrument_)
-{
-   audio_inst = &instrument_;
 }

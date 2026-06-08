@@ -16,8 +16,6 @@ IPluginFactory* pluginFactoryForVST3()
 {
    if (gPluginFactory == nullptr)
    {
-      plugin_main();
-
       static PFactoryInfo factory_info(PDK_PROJ_OWNER,
                                        PDK_PROJ_URL,
                                        PDK_PROJ_EMAIL,
