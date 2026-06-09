@@ -16,7 +16,7 @@
 using namespace Steinberg;
 
 Processor::Processor()
-   : synth(PLT::Synth::construct())
+   : synth(MIDI::Synth::construct())
 {
    setControllerClass(Controller::uid());
 }
@@ -125,7 +125,7 @@ void Processor::render(Vst::ProcessData& data, int32_t start, int32_t end, bool&
    {
       for(int32_t i = start; i < end; ++i)
       {
-         SIG::Float value = synth->getSample();
+         SIG::Float value = synth->sample();
 
          for(int32_t channel = 0; channel < data.outputs[0].numChannels; ++channel)
          {

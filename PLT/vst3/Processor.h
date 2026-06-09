@@ -13,7 +13,7 @@
 
 #include "Config.h"
 
-#include "PLT/Synth.h"
+#include "MIDI/Synth.h"
 
 class Processor : public Steinberg::Vst::AudioEffect
 {
@@ -55,5 +55,5 @@ private:
    template <typename SAMPLE>
    void render(Steinberg::Vst::ProcessData& data, int32_t start, int32_t end, bool& silent);
 
-   std::unique_ptr<PLT::Synth> synth{};
+   std::unique_ptr<MIDI::Synth> synth{};
 };

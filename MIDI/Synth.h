@@ -11,19 +11,19 @@
 #include "MIDI/Instrument.h"
 #include "SIG/SIG.h"
 
-namespace PLT {
+namespace MIDI {
 
-class Synth : public MIDI::Instrument
+class Synth : public Instrument
 {
 public:
    Synth(unsigned num_voices_)
-      : MIDI::Instrument(num_voices_)
+      : Instrument(num_voices_)
    {
    }
 
    virtual ~Synth() = default;
 
-   virtual SIG::Signal getSample() = 0;
+   virtual SIG::Signal sample() { return 0; }
 
    static Synth* construct();
 };
