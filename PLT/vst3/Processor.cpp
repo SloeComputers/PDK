@@ -21,6 +21,13 @@ Processor::Processor()
    setControllerClass(Controller::uid());
 }
 
+tresult PLUGIN_API Processor::setupProcessing(Vst::ProcessSetup& setup)
+{
+   synth->setSampleRate(setup.sampleRate);
+
+   return AudioEffect::setupProcessing(setup);
+}
+
 tresult PLUGIN_API Processor::initialize(FUnknown* context)
 {
    tresult result = Vst::AudioEffect::initialize(context);
@@ -41,12 +48,12 @@ tresult PLUGIN_API Processor::canProcessSampleSize(int32_t sample_size)
 
 tresult PLUGIN_API Processor::setActive(TBool state_)
 {
-  if (state_)
-  {
-     synth->allSoundsOff(/* channel */ 0);
-  }
+   if (state_)
+   {
+      synth->allSoundsOff(/* channel */ 0);
+   }
 
-  return Vst::AudioEffect::setActive(state_);
+   return Vst::AudioEffect::setActive(state_);
 }
 
 tresult PLUGIN_API Processor::process(Vst::ProcessData& data)

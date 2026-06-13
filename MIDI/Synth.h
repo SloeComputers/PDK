@@ -23,6 +23,8 @@ public:
 
    virtual ~Synth() = default;
 
+   virtual void setSampleRate(unsigned sample_rate_) {}
+
    virtual SIG::Signal sample() { return 0; }
 
    static Synth* construct();
