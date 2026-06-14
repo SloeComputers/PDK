@@ -20,6 +20,7 @@ if(${PDK_NATIVE})
                       testGain.cpp
                       testLinSlew.cpp
                       testLogPot.cpp
+                      testReSample.cpp
                       test_envAdsr.cpp
                       test_clipHard.cpp
                       test_clipNo.cpp
