@@ -32,6 +32,8 @@ public:
 
    unsigned getOnVoices() const { return on_voices; }
 
+   unsigned getNumVoices() const { return num_voices; }
+
    //---------------------------------------------------------------------------
    // Override the following for instrument implementation
 
@@ -62,87 +64,17 @@ public:
    // System Exclusive interface
    virtual void sysEx(uint8_t byte_) {}
 
-
-   //---------------------------------------------------------------------------
-   // Override the following for voice management (see MIDI::Instrument)
-
-   virtual signed findVoice(uint8_t note_)
-   {
-      for(unsigned voice = 0; voice < num_voices; ++voice)
-      {
-         if (voice_state[voice] == note_)
-            return voice;
-      }
-
-      return -1;
-   }
-
-   virtual signed allocVoice(uint8_t note_)
-   {
-      signed voice = findVoice(FREE);
-      if (voice < 0)
-      {
-         // Find the oldest GATE_OFF voice
-         uint8_t max_age = 0;
-
-         for(unsigned i = 0; i < num_voices; ++i)
-         {
-            if (voice_state[i] == GATE_OFF)
-            {
-               uint8_t age = current_event - voice_event[i];
-               if (age > max_age)
-               {
-                  age   = max_age;
-                  voice = i;
-               }
-            }
-         }
-      }
-
-      if (voice < 0)
-      {
-         // Find the oldest ON voice
-         uint8_t max_age = 0;
-
-         for(unsigned i = 0; i < num_voices; ++i)
-         {
-            uint8_t age = current_event - voice_event[i];
-            if (age > max_age)
-            {
-               age   = max_age;
-               voice = i;
-            }
-         }
-      }
-
-      ++on_voices;
-      setVoiceState(voice, note_);
-      return voice;
-   }
-
-   virtual signed offVoice(uint8_t note_)
-   {
-      signed voice = findVoice(note_);
-      if (voice >= 0)
-      {
-         setVoiceState(voice, GATE_OFF);
-         --on_voices;
-      }
-
-      return voice;
-   }
-
    //---------------------------------------------------------------------------
    // Incomming MIDI channel message handlers
 
-   void noteOn(uint8_t channel_, uint8_t note_,  uint8_t level_)
+   void noteOn(uint8_t channel_, uint8_t note_, uint8_t level_)
    {
       if (level_ == 0)
          return noteOff(channel_, note_, 0);
 
       if (not isValidChannel(channel_)) return;
 
-      signed index = poly ? allocVoice(note_)
+      signed index = poly ? getVoice(note_)
                           : channel_ - base_channel;
 
       if ((index >= 0) && (index < num_voices))
@@ -151,12 +83,22 @@ public:
       }
    }
 
-   void noteOff(uint8_t channel_, uint8_t note_,  uint8_t velocity_)
+   void noteOff(uint8_t channel_, uint8_t note_, uint8_t velocity_)
    {
       if (not isValidChannel(channel_)) return;
 
-      signed index = poly ? offVoice(note_)
-                          : channel_ - base_channel;
+      signed index{};
+      if (poly)
+      {
+         index = findVoice(note_);
+         if (index < 0) return;
+
+         setVoiceState(index, GATE_OFF);
+      }
+      else
+      {
+         index = channel_ - base_channel;
+      }
 
       if ((index >= 0) && (index < num_voices))
       {
@@ -299,14 +241,32 @@ public:
    }
 
 protected:
-   //! Deallocate the given voice so that it may be reallocated
-   void voiceFree(signed voice_)
+   //! Find an unallocated voice
+   signed allocVoice()
    {
-      setVoiceState(voice_, FREE);
+      for(unsigned voice = 0; voice < num_voices; ++voice)
+      {
+         if (voice_state[voice] == FREE)
+         {
+            ++on_voices;
+            return voice;
+         }
+      }
+
+      return -1;
+   }
+
+   //! Deallocate the given voice so that it may be reallocated
+   void freeVoice(unsigned voice_)
+   {
+      if (voice_state[voice_] != FREE)
+      {
+         setVoiceState(voice_, FREE);
+         --on_voices;
+      }
    }
 
    Interface* interface{}; //!< Interface attached to this instrument
-   uint8_t    num_voices;
 
 private:
    using State = uint8_t;
@@ -324,8 +284,62 @@ private:
       voice_event[index_] = current_event++;
    }
 
+   signed findVoice(uint8_t note_)
+   {
+      for(unsigned voice = 0; voice < num_voices; ++voice)
+      {
+         if (voice_state[voice] == note_)
+            return voice;
+      }
+
+      return -1;
+   }
+
+   signed getVoice(uint8_t note_)
+   {
+      signed voice = allocVoice();
+      if (voice < 0)
+      {
+         // Find the oldest GATE_OFF voice
+         uint8_t max_age = 0;
+
+         for(unsigned i = 0; i < num_voices; ++i)
+         {
+            if (voice_state[i] == GATE_OFF)
+            {
+               uint8_t age = current_event - voice_event[i];
+               if (age > max_age)
+               {
+                  age   = max_age;
+                  voice = i;
+               }
+            }
+         }
+      }
+
+      if (voice < 0)
+      {
+         // Find the oldest ON voice
+         uint8_t max_age = 0;
+
+         for(unsigned i = 0; i < num_voices; ++i)
+         {
+            uint8_t age = current_event - voice_event[i];
+            if (age > max_age)
+            {
+               age   = max_age;
+               voice = i;
+            }
+         }
+      }
+
+      setVoiceState(voice, note_);
+      return voice;
+   }
+
    static const unsigned MAX_VOICES = 16;
 
+   uint8_t num_voices;
    uint8_t base_channel{0};
    uint8_t num_channels{1};
    bool    local_control{true};
