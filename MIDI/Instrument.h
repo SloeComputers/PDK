@@ -312,6 +312,7 @@ private:
                {
                   age   = max_age;
                   voice = i;
+                  setVoiceState(voice, note_);
                }
             }
          }
@@ -333,7 +334,9 @@ private:
          }
       }
 
-      setVoiceState(voice, note_);
+      if (voice >= 0)
+         setVoiceState(voice, note_);
+
       return voice;
    }
 
