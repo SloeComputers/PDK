@@ -7,9 +7,7 @@
 
 #include "test.h"
 
-int test_ctype()
+void test_ctype()
 {
    EXPECT_TRUE(isdigit('0'));
-
-   return 0;
 }

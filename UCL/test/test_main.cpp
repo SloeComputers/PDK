@@ -3,17 +3,34 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
+#include <cstdio>
+
 #include "test.h"
 
-extern int test_ctype();
+extern void test_ctype();
+extern void test_sprintf();
 
-bool TST::pass;
+bool TST::pass{true};
+
+void TST::fail(const char* file_, unsigned line_no_)
+{
+   printf("FAIL: %s:%u\n", file_, line_no_);
+}
+
+void TST::print(const char* s_)
+{
+   printf("\"%s\"\n", s_);
+}
 
 int main()
 {
-   int status{0};
+   test_ctype();
+   test_sprintf();
 
-   status += test_ctype();
+   if (TST::pass)
+      printf("PASSED\n");
+   else
+      printf("FAILED\n");
 
-   return status;
+   return TST::pass ? 0 : 1;
 }

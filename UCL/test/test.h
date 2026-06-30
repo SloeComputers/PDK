@@ -9,9 +9,9 @@ namespace TST {
 
 extern bool pass;
 
-inline void fail(const char* file_, unsigned line_)
-{
-}
+void fail(const char* file_, unsigned line_);
+
+void print(const char* s_);
 
 template <typename TYPE_L, typename TYPE_R>
 inline bool expect_eq(TYPE_L      left_,
