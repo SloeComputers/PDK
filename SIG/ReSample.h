@@ -3,13 +3,17 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
+
 #pragma once
+
+#include <cmath>
 
 #include "Types.h"
 
 namespace SIG {
 
-template <typename SOURCE, unsigned N, unsigned LOG2_M = 8>
+//! Windowed-sinc polyphase FIR resampler with linear phase interpolation
+template <typename SOURCE, unsigned N, unsigned LOG2_PHASE_STEPS = 8>
 class ReSample
 {
 public:
@@ -17,41 +21,57 @@ public:
       : source(source_)
       , sample_rate_in(sample_rate_in_)
    {
-      // TODO replace this point sample with sinc
-      for(unsigned i = 0; i < FILTER_SIZE; ++i)
+      for(unsigned phase_idx = 0; phase_idx <= PHASE_STEPS; ++phase_idx)
       {
-         signed j = i - (FILTER_SIZE / 2);
+         Float phase = Float(phase_idx) / PHASE_STEPS;
 
-         if ((j >= -M/2) && (j < +M/2))
-            filter[i] = 1.0;
-         else
-            filter[i] = 0.0;
+         Float sum_coef = 0.0;
+         for(unsigned i = 0; i < INPUT_SIZE; ++i)
+         {
+            Float x    = phase - (i - N);
+            Float coef = sinc(x) * window(x);
+            table[phase_idx][i] = coef;
+            sum_coef += coef;
+         }
+
+         // Normalize as windowed sinc() will not convolve to 1.0
+         for(unsigned i = 0; i < INPUT_SIZE; ++i)
+         {
+            table[phase_idx][i] /= sum_coef;
+         }
       }
    }
 
+   //! Set the output sampling frequency (Hz)
    void setOutRate(unsigned sample_rate_out_)
    {
-      delta_t = TIME_ONE * SIG::Float(sample_rate_in) / sample_rate_out_;
+      delta_phase = Float(sample_rate_in) / sample_rate_out_;
    }
 
+   //! Get next sample
    Signal operator()()
    {
-      uint32_t offset = t >> (LOG2_T - LOG2_M);
-      unsigned j      = input_first;
       Signal   signal = 0;
+      unsigned j      = input_first;
+      unsigned k      = unsigned(phase * PHASE_STEPS);
+      Float    a      = phase * PHASE_STEPS - k;
 
       for(unsigned i = 0; i < INPUT_SIZE; ++i)
       {
-         signal += filter[i * M + offset] * input[j];
+         Float coef1 = table[k    ][i];
+         Float coef2 = table[k + 1][i];
+         Float coef  = coef1 + a * (coef2 - coef1);
+
+         signal += coef * input[j];
 
          if (++j == INPUT_SIZE)
             j = 0;
       }
 
-      t += delta_t;
-      while(t >= TIME_ONE)
+      phase += delta_phase;
+      while(phase >= 1.0)
       {
-         t -= TIME_ONE;
+         phase -= 1.0;
          input[input_first] = source();
 
          if (++input_first == INPUT_SIZE)
@@ -62,19 +82,32 @@ public:
    }
 
 private:
-   static const unsigned LOG2_T      = 24;
-   static const signed   M           = 1 << LOG2_M;
-   static const unsigned INPUT_SIZE  = N * 2 + 1;
-   static const unsigned FILTER_SIZE = INPUT_SIZE * M;
-   static const uint32_t TIME_ONE    = 1 << LOG2_T;
+   //! Classic sinc()
+   static double sinc(double x)
+   {
+      if (fabs(x) < 1e-12)
+         return 1.0;
 
-   SOURCE&     source;
-   unsigned    sample_rate_in;
-   SIG::Signal input[2 * N + 1] = {};
-   SIG::Signal filter[FILTER_SIZE];
-   unsigned    input_first{0};
-   int32_t     t{0};
-   uint32_t    delta_t{TIME_ONE};
+      double t = M_PI * x;
+      return sin(t) / t;
+   }
+
+   //! A sinc() based windowing function
+   static double window(double x)
+   {
+      return sinc(x / N);
+   }
+
+   static constexpr signed   PHASE_STEPS = 1 << LOG2_PHASE_STEPS;
+   static constexpr unsigned INPUT_SIZE  = N * 2 + 1;
+
+   SOURCE&  source;
+   unsigned sample_rate_in;                      //!< Fin
+   Float    delta_phase{};                       //!< Fin / Fout
+   unsigned input_first{0};                      //!< Index into input circular buffer
+   Signal   input[2 * N + 1] = {};               //!< Circular buffer for input samples
+   Float    phase{0.0};                          //!< Current "phase" 0.0..1.0
+   Float    table[PHASE_STEPS + 1][INPUT_SIZE];  //!< Pre-computed filter
 };
 
 } // namespace SIG
