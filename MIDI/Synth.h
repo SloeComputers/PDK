@@ -8,6 +8,8 @@
 // XXX undo some crazy namespace corruption by the VST3 build environment
 #undef RELEASE
 
+#include <cstdio>
+
 #include "MIDI/Instrument.h"
 #include "SIG/SIG.h"
 
@@ -22,6 +24,8 @@ public:
    }
 
    virtual ~Synth() = default;
+
+   virtual void setConsole(FILE* stream_) {}
 
    virtual void setSampleRate(unsigned sample_rate_) {}
 

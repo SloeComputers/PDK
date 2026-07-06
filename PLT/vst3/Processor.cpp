@@ -6,12 +6,14 @@
 #include <algorithm>
 
 #include "pluginterfaces/vst/ivstevents.h"
+#include "pluginterfaces/vst/ivstparameterchanges.h"
 #include "public.sdk/source/vst/vstaudioeffect.h"
 
 #undef RELEASE
 
 #include "Processor.h"
 #include "Controller.h"
+#include "Log.h"
 
 using namespace Steinberg;
 
@@ -19,6 +21,8 @@ Processor::Processor()
    : synth(MIDI::Synth::construct())
 {
    setControllerClass(Controller::uid());
+
+   synth->setConsole(LOGFP());
 }
 
 tresult PLUGIN_API Processor::setupProcessing(Vst::ProcessSetup& setup)
@@ -58,14 +62,35 @@ tresult PLUGIN_API Processor::setActive(TBool state_)
 
 tresult PLUGIN_API Processor::process(Vst::ProcessData& data)
 {
-   int32_t    num_samples = data.numSamples;
-   int32_t    event_idx   = 0;
-   int32_t    num_events  = data.inputEvents != nullptr ? data.inputEvents->getEventCount() : 0;
-   int32_t    event_sample;
-   Vst::Event event{};
+   int32_t num_samples = data.numSamples;
+
+   Vst::IParameterChanges* changes    = data.inputParameterChanges;
+   int32_t                 num_params = changes != nullptr ? changes->getParameterCount() : 0;
+   int32_t                 param_idx   = 0;
+   Vst::IParamValueQueue*  param;
+   int32_t                 param_sample;
+
+   for(; param_idx < num_params; ++param_idx)
+   {
+      param = changes->getParameterData(param_idx);
+      if (param->getParameterId() == Controller::PARAM_ID_PROGRAM_CHANGE)
+      {
+         Vst::ParamValue value;
+         param->getPoint(param->getPointCount() - 1, param_sample, value);
+
+         // LOG("Program parameter = %f\n", value);
+         // synth->programChange(0, 11);
+      }
+   }
+
+   Vst::IEventList* events     = data.inputEvents;
+   int32_t          num_events = events != nullptr ? events->getEventCount() : 0;
+   int32_t          event_idx  = 0;
+   Vst::Event       event{};
+   int32_t          event_sample;
 
    if ((event_idx < num_events) &&
-       (data.inputEvents->getEvent(event_idx, event) == kResultOk))
+       (events->getEvent(event_idx, event) == kResultOk))
       event_sample = std::min(event.sampleOffset, num_samples);
    else
       event_sample = num_samples;
@@ -97,7 +122,7 @@ tresult PLUGIN_API Processor::process(Vst::ProcessData& data)
          ++event_idx;
 
          if ((event_idx < num_events) &&
-             (data.inputEvents->getEvent(event_idx, event) == kResultOk))
+             (events->getEvent(event_idx, event) == kResultOk))
             event_sample = std::min(event.sampleOffset, num_samples);
          else
             event_sample = num_samples;
