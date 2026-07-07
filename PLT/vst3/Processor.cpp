@@ -79,7 +79,7 @@ tresult PLUGIN_API Processor::process(Vst::ProcessData& data)
          param->getPoint(param->getPointCount() - 1, param_sample, value);
 
          // LOG("Program parameter = %f\n", value);
-         // synth->programChange(0, 11);
+         synth->programChange(0, uint8_t(value * 127));
       }
    }
 
