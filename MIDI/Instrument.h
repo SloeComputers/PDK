@@ -129,6 +129,7 @@ public:
          for(unsigned index = 0; index < num_voices; ++index)
          {
             voiceMute(index);
+            freeVoice(index);
          }
          break;
 
@@ -136,6 +137,7 @@ public:
          for(unsigned index = 0; index < num_voices; ++index)
          {
             voiceReset(index);
+            freeVoice(index);
          }
          break;
 
@@ -179,6 +181,7 @@ public:
       for(unsigned index = 0; index < num_voices; ++index)
       {
          voiceMute(index);
+         freeVoice(index);
          voiceProgram(index, prog_);
       }
    }
@@ -310,8 +313,8 @@ private:
                uint8_t age = current_event - voice_event[i];
                if (age > max_age)
                {
-                  age   = max_age;
-                  voice = i;
+                  max_age = age;
+                  voice   = i;
                   setVoiceState(voice, note_);
                }
             }
@@ -328,8 +331,8 @@ private:
             uint8_t age = current_event - voice_event[i];
             if (age > max_age)
             {
-               age   = max_age;
-               voice = i;
+               max_age = age;
+               voice   = i;
             }
          }
       }
