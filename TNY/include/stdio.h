@@ -38,6 +38,7 @@ extern size_t  fread(void*, size_t, size_t, FILE* stream);
 extern size_t  fwrite(const void*, size_t, size_t, FILE* stream);
 extern int     fclose(FILE* stream);
 extern int     feof(FILE* stream);
+extern int     fflush(FILE* stream);
 
 extern char*   fgets(char*, int, FILE*);
 extern int     fgetc(FILE*);

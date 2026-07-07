@@ -6,6 +6,7 @@
 add_library(TNY STATIC
             stdio/fprintf.cpp
             stdio/feof.cpp
+            stdio/fflush.cpp
             stdio/fgetc.cpp
             stdio/fputc.cpp
             stdio/fstreams.cpp
