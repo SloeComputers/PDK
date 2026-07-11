@@ -5,27 +5,33 @@
 
 #pragma once
 
+#include <cstdarg>
 #include <cstdio>
+#include <mutex>
 
 inline FILE* LOGFP()
 {
-   static FILE* fp = nullptr;
-
-   if (fp == nullptr)
+   static FILE* log_fp = []()
    {
-      fp = fopen("/tmp/PDK_vst3.log", "a");
+      FILE* fp = fopen("/tmp/PDK_vst3.log", "a");
       if (fp == nullptr)
          fp = stdout;
 
       fprintf(fp,
          "--------------------------------------------------------------------------------\n");
-   }
 
-   return fp;
+      return fp;
+   }();
+
+   return log_fp;
 }
 
 inline void LOG(const char* format, ...)
 {
+   static std::mutex mutex{};
+
+   std::lock_guard<std::mutex> lock(mutex);
+
    FILE* fp = LOGFP();
 
    va_list ap;

@@ -23,15 +23,15 @@ public:
 
    static void registerClass(Steinberg::CPluginFactory* factory_)
    {
-      static Steinberg::PClassInfo2 class_info(uid().toTUID(),
-                                               Steinberg::PClassInfo::kManyInstances,
-                                               kVstComponentControllerClass,
-                                               PDK_PROJ_NAME "_Controller",
-                                               0,
-                                               "",
-                                               nullptr,
-                                               PDK_PROJ_VERSION,
-                                               kVstVersionString);
+      const static Steinberg::PClassInfo2 class_info(uid().toTUID(),
+                                                     Steinberg::PClassInfo::kManyInstances,
+                                                     kVstComponentControllerClass,
+                                                     PDK_PROJ_NAME "_Controller",
+                                                     0,
+                                                     "",
+                                                     nullptr,
+                                                     PDK_PROJ_VERSION,
+                                                     kVstVersionString);
 
       factory_->registerClass(&class_info, construct);
    }
