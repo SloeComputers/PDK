@@ -116,7 +116,6 @@ if("${PDK_TARGET}" STREQUAL "native")
    endif()
 
    add_subdirectory(TGT)
-   add_subdirectory(UCL)
 
 elseif("${PDK_TARGET}" STREQUAL "vst3")
 
