@@ -18,6 +18,7 @@ extern void  free(void*);
 extern int   atexit(void (*)(void));
 extern int   system(const char*);
 extern void  exit(int);
+extern void  abort();
 
 #ifdef __cplusplus
 }
