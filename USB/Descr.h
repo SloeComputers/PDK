@@ -128,17 +128,19 @@ struct ConfigDescr
 
 struct InterfaceDescr : public Descr
 {
+   static constexpr uint8_t LENGTH = 9;
+
    InterfaceDescr() = default;
 
    InterfaceDescr(List& list_, uint8_t class_, uint8_t sub_class_, uint8_t protocol_ = 0)
-      : Descr(list_, length)
+      : Descr(list_, LENGTH)
       , clas(class_)
       , sub_class(sub_class_)
       , protocol(protocol_)
    {
    }
 
-   uint8_t length{9};
+   uint8_t length{LENGTH};
    uint8_t type{TYPE_INTERFACE};
    uint8_t number{0};
    uint8_t alternate_setting{0};
