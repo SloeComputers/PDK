@@ -7,6 +7,11 @@
 
 #pragma once
 
+// XXX seems fixed in gcc 16.2
+#if defined(__GNUC__) && !defined(__clang__) && (__GNUC__ == 16) && (__GNUC_MINOR__ == 1)
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
+
 #include <cstdint>
 
 #include "STB/List.h"
