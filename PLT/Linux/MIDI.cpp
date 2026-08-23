@@ -15,7 +15,7 @@
 #include <sys/fcntl.h>
 #include <unistd.h>
 
-#include "PLT/MIDIInterface.h"
+#include "PLT/MIDI.h"
 
 namespace PLT {
 
@@ -94,12 +94,12 @@ private:
 };
 
 
-Interface::Interface()
+Interface::Interface(unsigned device_out_)
 {
    pimpl = new Pimpl();
 }
 
-Interface::Interface(::MIDI::Instrument& instrument_, bool debug_)
+Interface::Interface(::MIDI::Instrument& instrument_, unsigned device_out_, bool debug_)
    : ::MIDI::Interface(instrument_, debug_)
 {
    pimpl = new Pimpl();

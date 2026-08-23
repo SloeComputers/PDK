@@ -8,8 +8,7 @@
 find_package(SDL2 REQUIRED)
 
 add_library(PLT STATIC
-    ../Stub/Midi.cpp
-    MIDIInterface.cpp
+    MIDI.cpp
     ../SDL2/Audio.cpp
     ../SDL2/Event.cpp
     ../SDL2/Frame.cpp

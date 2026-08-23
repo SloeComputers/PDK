@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <mutex>
 
-#include "PLT/MIDIInterface.h"
+#include "PLT/MIDI.h"
 #include "STB/Fifo.h"
 
 namespace PLT {
@@ -24,12 +24,12 @@ struct Interface::Pimpl
 };
 
 
-Interface::Interface()
+Interface::Interface(unsigned device_out_)
 {
    pimpl = new Pimpl();
 }
 
-Interface::Interface(::MIDI::Instrument& instrument_, bool debug_)
+Interface::Interface(::MIDI::Instrument& instrument_, unsigned device_out_, bool debug_)
    : ::MIDI::Interface(instrument_, debug_)
 {
    pimpl = new Pimpl();

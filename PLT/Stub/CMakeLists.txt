@@ -9,7 +9,7 @@ add_library(PLT STATIC
             Frame.cpp
             Image.cpp
             NullBitmap.cpp
-            Midi.cpp
+            MIDI.cpp
             Sounder.cpp
             Yield.cpp
             Info.cpp

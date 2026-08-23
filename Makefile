@@ -1,5 +1,5 @@
 
-targets = rp2040 rp2350 LPC1114 LPC11U24 LPC1768 LPC810 nRF51 nRF52 ATtiny85 ATtiny84 native
+targets = rp2040 rp2350 LPC1114 LPC11U24 LPC1768 LPC810 nRF51 nRF52 native # ATtiny85 ATtiny84
 
 all: $(targets)
 

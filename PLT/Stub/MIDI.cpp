@@ -5,14 +5,18 @@
 
 // Stub MIDI implementation
 
-#include "PLT/MIDIInterface.h"
+#include "PLT/MIDI.h"
 
 namespace PLT {
 
 namespace MIDI {
 
-Interface::Interface(::MIDI::Instrument& instrument_)
-   : ::MIDI::Interface(instrument_)
+Interface::Interface(unsigned device_out_)
+{
+}
+
+Interface::Interface(::MIDI::Instrument& instrument_, unsigned device_out_, bool debug_)
+   : ::MIDI::Interface(instrument_, debug_)
 {
 }
 

@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
+//! \file
 //! \brief Platform abstraction layer for access to MIDI devices
 
 #pragma once
@@ -22,9 +23,9 @@ namespace MIDI {
 class Interface : public ::MIDI::Interface
 {
 public:
-   Interface();
+   Interface(unsigned device_out_ = 0);
 
-   Interface(::MIDI::Instrument& instrument_, bool debug_ = false);
+   Interface(::MIDI::Instrument& instrument_, unsigned device_out_ = 0, bool debug_ = false);
 
    ~Interface();
 
@@ -34,8 +35,9 @@ public:
    void tx(uint8_t byte) override;
 
 private:
-   struct Pimpl;
-   Pimpl* pimpl;
+   class Pimpl;
+
+   Pimpl* pimpl{};
 };
 
 
