@@ -13,7 +13,7 @@
 #include "MTL/chip/Uart.h"
 
 #elif defined(HW_MIDI_IN_NATIVE)
-#include "PLT/MIDIInterface.h"
+#include "PLT/MIDI.h"
 
 #endif
 
