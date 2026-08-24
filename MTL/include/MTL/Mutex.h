@@ -12,7 +12,7 @@ namespace MTL {
 
 class Mutex
 {
-private:
+public:
    Mutex();
 
    //! Block until lock gained

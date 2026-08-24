@@ -29,9 +29,16 @@ public:
 
    ~Interface();
 
+   //! Are any input sources connected
    bool connected() const;
+
+   //! Is input FIFO empty
    bool empty() const override;
+
+   //! Get next byte
    uint8_t rx() override;
+
+   //! Send a byte
    void tx(uint8_t byte) override;
 
 private:

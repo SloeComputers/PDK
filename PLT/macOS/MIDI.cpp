@@ -184,7 +184,7 @@ private:
    MIDIEndpointRef              destination{};
    MIDIClientRef                client{};
    MIDIPortRef                  input_port{};
-   MIDIPortRef     output_port{};
+   MIDIPortRef                  output_port{};
 };
 
 

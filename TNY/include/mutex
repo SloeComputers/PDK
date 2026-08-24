@@ -33,7 +33,7 @@ public:
    }
 
 private:
-   MTL::mutex impl;
+   MTL::Mutex impl;
 };
 
 

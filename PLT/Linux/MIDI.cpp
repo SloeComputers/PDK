@@ -25,7 +25,7 @@ namespace MIDI {
 class Interface::Pimpl
 {
 public:
-   Pimpl()
+   Pimpl(unsigned device_out_index_)
    {
       // XXX assume that all Linux MIDI devices are called midiN
       //     where N is an integer between 1 and MAX_MIDI_INDEX
@@ -96,13 +96,13 @@ private:
 
 Interface::Interface(unsigned device_out_)
 {
-   pimpl = new Pimpl();
+   pimpl = new Pimpl(device_out_);
 }
 
 Interface::Interface(::MIDI::Instrument& instrument_, unsigned device_out_, bool debug_)
    : ::MIDI::Interface(instrument_, debug_)
 {
-   pimpl = new Pimpl();
+   pimpl = new Pimpl(device_out_);
 }
 
 Interface::~Interface()

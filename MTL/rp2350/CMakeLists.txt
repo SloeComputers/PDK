@@ -13,6 +13,7 @@ add_library(MTL STATIC
             ../core/CortexM33/MTL_excep.cpp
             MTL_start_core.cpp
             MTL_clock.cpp
+            MTL_mutex.cpp
             Dma.cpp
             Config.cpp)
 
