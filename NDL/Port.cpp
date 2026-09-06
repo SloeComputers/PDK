@@ -27,11 +27,11 @@ Port::~Port()
    }
 }
 
-void Port::setLabel(const char* label_)
+void Port::label(const char* label_)
 {
    if (port != nullptr)
    {
-      port->setLabel(label_);
+      port->label(label_);
       return;
    }
 

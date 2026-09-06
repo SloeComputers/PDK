@@ -30,7 +30,7 @@ public:
       return port != nullptr ? port->getNode() : node;
    }
 
-   void setLabel(const char* label_);
+   void label(const char* label_);
 
    void link(Port& port_)
    {

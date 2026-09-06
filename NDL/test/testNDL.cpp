@@ -23,7 +23,7 @@ TEST(NDL, basic)
    EXPECT_EQ(port.getNode()->getPorts().size(), 2);
 
    EXPECT_EQ(port.getNode()->getLabel(), (char*)nullptr);
-   port.setLabel("label");
+   port.label("label");
    EXPECT_EQ(strcmp(other_port.getNode()->getLabel(), "label"), 0);
    EXPECT_EQ(other_port.getNode(), port.getNode());
 }
@@ -99,13 +99,13 @@ TEST(NDL, labels)
 
    port_a.connect(port_b);
 
-   port_a.setLabel("first");
+   port_a.label("first");
    EXPECT_EQ(model.findNode("first"), port_a.getNode());
    EXPECT_EQ(model.findNode("missing"), (NDL::Node*)nullptr);
 
    // A later label on the same node is reported as a conflict and takes
    // precedence for lookup.
-   port_b.setLabel("second");
+   port_b.label("second");
    EXPECT_EQ(model.findNode("first"), (NDL::Node*)nullptr);
    EXPECT_EQ(model.findNode("second"), port_a.getNode());
 }

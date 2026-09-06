@@ -55,6 +55,8 @@ FILE* NDL::openForWrite(const Model* model_, const char* dir_, const char* ext_)
       error("Failed to open '%s'", filename.c_str());
    }
 
+   printf("Write '%s'\n", filename.c_str());
+
    return fp;
 }
 
