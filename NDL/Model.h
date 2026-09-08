@@ -51,6 +51,8 @@ protected:
    //! Construct a new node
    virtual Node* constructNode();
 
+   std::vector<Node*> node_list{};
+
 private:
    friend class Device;
 
@@ -87,7 +89,6 @@ private:
 
    const char*          name;
    std::vector<Device*> device_list{};
-   std::vector<Node*>   node_list{};
 };
 
 } // namespace NDL
