@@ -40,3 +40,7 @@ Node* Device::getOtherNode(Port* port_) const
    return other_port->getNode();
 }
 
+void Device::operator()(const char* label_)
+{
+   label = label_;
+}

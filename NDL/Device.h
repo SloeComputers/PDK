@@ -29,6 +29,8 @@ public:
 
    const char* getName() const { return name; }
 
+   const char* getLabel() const { return label; }
+
    const std::vector<Port*>& getPorts() const { return port_list; }
 
    virtual const char* getType() const { return "none"; }
@@ -49,6 +51,8 @@ public:
    //! For the given port return the node the other port is connected
    //! to for a 2 port device
    Node* getOtherNode(Port* port_) const;
+
+   void operator()(const char* label_);
 
    unsigned id{0};
 
@@ -81,6 +85,7 @@ private:
    Model*             model;
    const char*        name;
    std::vector<Port*> port_list{};
+   const char*        label{};
 };
 
 } // namespace NDL
