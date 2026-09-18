@@ -97,6 +97,8 @@ public:
       : IOBase(freq, format, channels, samples, /* input */ false)
    {}
 
+   virtual ~Out() {}
+
    //! Overide this method to supply 8-bit signed sample data
    //
    //! This method will be automatically called in real-time when
@@ -159,6 +161,8 @@ public:
    In(unsigned freq, Format format, unsigned channels, unsigned samples = 1024)
       : IOBase(freq, format, channels, samples, /* input */ true)
    {}
+
+   virtual ~In() {}
 
    //! Overide this method to recieve 8-bit signed sample data
    //
