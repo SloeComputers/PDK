@@ -12,17 +12,27 @@
 
 using namespace SIG;
 
+class TestOsc : public osc::Sine
+{
+public:
+   Signal operator()(unsigned chan)
+   {
+      (void) chan;
+      return Sine::operator()();
+   }
+};
+
 TEST(SIG, resample)
 {
    constexpr unsigned SOURCE_RATE = 49096;
    constexpr unsigned OUTPUT_RATE = 48000;
 
-   SIG::osc::Sine osc{};
+   TestOsc osc{};
 
    osc.sync();
    osc.setFreq(440.0, SOURCE_RATE);
 
-   SIG::ReSample<SIG::osc::Sine, /* N */ 2, 2> re_sample{osc, SOURCE_RATE};
+   SIG::ReSample<TestOsc, /* CHANS */ 1, /* N */ 2, 2> re_sample{osc, SOURCE_RATE};
 
    re_sample.setOutRate(OUTPUT_RATE);
 
@@ -39,6 +49,7 @@ TEST(SIG, resample)
       last_out = out;
    }
 
+   printf("%u\n", pos_cross);
    EXPECT_GE(441, pos_cross);
    EXPECT_LE(439, pos_cross);
 }

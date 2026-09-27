@@ -13,7 +13,10 @@
 namespace SIG {
 
 //! Windowed-sinc polyphase FIR resampler with linear phase interpolation
-template <typename SOURCE, unsigned N, unsigned LOG2_PHASE_STEPS = 8>
+template <typename SOURCE,
+          unsigned CHANS,
+          unsigned N,
+          unsigned LOG2_PHASE_STEPS = 8>
 class ReSample
 {
 public:
@@ -49,12 +52,13 @@ public:
    }
 
    //! Get next sample
-   Signal operator()()
+   Signal operator()(unsigned ch = 0)
    {
+      Chan&    chan   = channel[ch];
       Signal   signal = 0;
-      unsigned j      = input_first;
-      unsigned k      = unsigned(phase * PHASE_STEPS);
-      Float    a      = phase * PHASE_STEPS - k;
+      unsigned j      = chan.input_first;
+      unsigned k      = unsigned(chan.phase * PHASE_STEPS);
+      Float    a      = chan.phase * PHASE_STEPS - k;
 
       for(unsigned i = 0; i < INPUT_SIZE; ++i)
       {
@@ -62,20 +66,20 @@ public:
          Float coef2 = table[k + 1][i];
          Float coef  = coef1 + a * (coef2 - coef1);
 
-         signal += coef * input[j];
+         signal += coef * chan.input[j];
 
          if (++j == INPUT_SIZE)
             j = 0;
       }
 
-      phase += delta_phase;
-      while(phase >= 1.0)
+      chan.phase += delta_phase;
+      while(chan.phase >= 1.0)
       {
-         phase -= 1.0;
-         input[input_first] = source();
+         chan.phase -= 1.0;
+         chan.input[chan.input_first] = source(ch);
 
-         if (++input_first == INPUT_SIZE)
-            input_first = 0;
+         if (++chan.input_first == INPUT_SIZE)
+            chan.input_first = 0;
       }
 
       return signal;
@@ -101,12 +105,17 @@ private:
    static constexpr signed   PHASE_STEPS = 1 << LOG2_PHASE_STEPS;
    static constexpr unsigned INPUT_SIZE  = N * 2 + 1;
 
+   struct Chan
+   {
+      unsigned input_first{0};        //!< Index into input circular buffer
+      Signal   input[2 * N + 1] = {}; //!< Circular buffer for input samples
+      Float    phase{0.0};            //!< Current "phase" 0.0..1.0
+   };
+
    SOURCE&  source;
    unsigned sample_rate_in;                      //!< Fin
    Float    delta_phase{};                       //!< Fin / Fout
-   unsigned input_first{0};                      //!< Index into input circular buffer
-   Signal   input[2 * N + 1] = {};               //!< Circular buffer for input samples
-   Float    phase{0.0};                          //!< Current "phase" 0.0..1.0
+   Chan     channel[CHANS];                      //!< State for each audio channel
    Float    table[PHASE_STEPS + 1][INPUT_SIZE];  //!< Pre-computed filter
 };
 
