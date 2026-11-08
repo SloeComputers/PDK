@@ -5,15 +5,15 @@
 
 # cmake configuration for Linux builds
 
-find_package(SDL2 REQUIRED)
+find_package(SDL3 REQUIRED)
 
 add_library(PLT STATIC
     MIDI.cpp
-    ../SDL2/Audio.cpp
-    ../SDL2/Event.cpp
-    ../SDL2/Frame.cpp
-    ../SDL2/Image.cpp
-    ../SDL2/Bitmap.cpp
+    ../SDL3/Audio.cpp
+    ../SDL3/Event.cpp
+    ../SDL3/Frame.cpp
+    ../SDL3/Image.cpp
+    ../SDL3/Bitmap.cpp
     ../Stub/Info.cpp
     ../Stub/Sounder.cpp
     ../POSIX/Yield.cpp

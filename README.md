@@ -97,32 +97,32 @@ The following small projects are using the PDK...
 
 One of the primary target platforms.
 
-Depend on SDL2, so a development install of SDL2 is required.
+Depend on SDL3, so a development install of SDL3 is required.
 
 Typically the following packages will be required...
 
 ```
 sudo apt-get install cmake
-sudo apt-get install libsdl2-dev
+sudo apt-get install libsdl3-dev
 ```
 
 ### macOS
 
 One of the primary target platforms.
 
-Depend on SDL2, so a development install of SDL2 is required.
+Depend on SDL3, so a development install of SDL3 is required.
 
 Typically the following packages will be required...
 
 ```
 brew update
 brew install cmake
-brew install sdl2
+brew install sdl3
 ```
 
 ### Kindle3
 
-Although this is also a Linux build, it does not depend on SDL2.
+Although this is also a Linux build, it does not depend on SDL.
 
 Requires gcc/g++ built for arm-linux-gnueabihf targets that supports C++11 and a set of
 headers and static runtime libraries that are compatible with the Linux kernel v2.6.26
@@ -143,11 +143,11 @@ sudo apt-get install g++-4.7
 
 ### Browser (via Emscripten)
 
-Uses the SDL2 library supplied with Emscripten.
+Uses the SDL library supplied with Emscripten. (CURRENT STATUS UNCERTAIN)
 
 ### iOS
 
-Requires access to a source installation of SDL2 which is built into a linSDL2.a as part of
+Requires access to a source installation of SDL which is built into a static lib as part of
 the application build process.
 
 Build of an actual app has not been achieved yet, and may not be easily achievable without
@@ -156,7 +156,7 @@ an Xcode project file.
 ### Android
 
 Requires an NDK installation. Currently builds as a console only app as an integration with
-an Android build of SDL2 has not been achieved yet.
+an Android build of SDL has not been achieved yet.
 
 ## Coding style
 

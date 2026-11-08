@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \file Image.h
+//! \file
 //! \brief Platform specific bitmap image representation
 
 #pragma once

@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \file Frame.h
+//! \file
 //! \brief Platform abstraction interface for raw frame buffer
 
 #pragma once
@@ -131,7 +131,7 @@ public:
 private:
    class Impl;
 
-   Impl*    pimpl{nullptr};
+   Impl* pimpl{nullptr};
 };
 
 } // namespace PLT

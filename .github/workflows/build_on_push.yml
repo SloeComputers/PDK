@@ -25,7 +25,7 @@ jobs:
     - name: Install dependencies
       run: |
            sudo apt-get update
-           sudo apt-get install -y libsdl2-dev
+           sudo apt-get install -y libsdl3-dev
            sudo apt-get install -y gcc-arm-none-eabi
 
     - name: Prepare build
@@ -35,7 +35,7 @@ jobs:
       shell: bash
       working-directory: ${{github.workspace}}/build/${{matrix.target}}
       run: |
-        export SDL2_DIR=${{github.workspace}}/.github/workflows
+        export SDL3_DIR=${{github.workspace}}/.github/workflows
         cmake ../.. -DCMAKE_TOOLCHAIN_FILE=PDK/TGT/${{matrix.target}}/toolchain.cmake -DBUILD_TESTING=ON
 
     - name: Build
@@ -66,7 +66,7 @@ jobs:
     - name: Install dependencies
       run: |
         brew install arm-none-eabi-gcc
-        brew install SDL2
+        brew install SDL3
 
     - name: Prepare build
       run: mkdir -p ${{github.workspace}}/build/${{matrix.target}}

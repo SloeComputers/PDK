@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 //-------------------------------------------------------------------------------
 
-//! \file Bitmap.h
+//! \file
 //! \brief Platform abstraction interface for memory image buffer
 
 #pragma once
